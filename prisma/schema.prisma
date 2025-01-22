@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model wp_user {
+  id                  String   @id @default(uuid())
+  user_login          String
+  user_pass           String
+  user_nicename       String
+  user_email          String   @unique
+  user_url            String
+  user_registered     DateTime @default(now())
+  user_activation_key String
+  user_status         Int
+  display_name        String
+}
+
+model wp_posts {
+  ID                    Int      @id @default(autoincrement())
+  post_author           Int      @default(0)
+  post_date             DateTime @default(now())
+  post_date_gmt         DateTime @default(now())
+  post_content          String
+  post_title            String
+  post_excerpt          String
+  post_status           String   @default("publish")
+  comment_status        String   @default("open")
+  ping_status           String   @default("open")
+  post_password         String   @default("")
+  post_name             String   @default("")
+  to_ping               String
+  pinged                String
+  post_modified         DateTime @default(now())
+  post_modified_gmt     DateTime @default(now())
+  post_content_filtered String
+  post_parent           Int      @default(0)
+  guid                  String   @default("")
+  menu_order            Int      @default(0)
+  post_type             String   @default("post")
+  post_mime_type        String   @default("")
+  comment_count         Int      @default(0)
+}
