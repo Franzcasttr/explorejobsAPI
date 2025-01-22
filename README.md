@@ -63,7 +63,7 @@ A simple job listing application inspired by platforms like LinkedIn, Indeed, an
 - **Request Body**:
   ```json
   {
-    "user_login": "john_doe",
+    "user_email": "john_doe",
     "user_pass": "securePassword123"
   }
   ```
