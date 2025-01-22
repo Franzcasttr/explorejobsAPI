@@ -1,73 +1,153 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Job Listing Application
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A simple job listing application inspired by platforms like LinkedIn, Indeed, and Glassdoor. This application allows users to register, log in, and view job listings. It provides a RESTful API for managing job postings and user authentication.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Features
 
-## Description
+- 📄 **User Registration**: Users can create an account to access job listings.
+- 🔑 **User Login**: Secure login functionality using JWT (JSON Web Tokens).
+- 👨‍💻 **Job Listings**: Users can view a list of available job postings.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🖥️ Technologies Used
+
+- **NestJS**: A progressive Node.js framework for building efficient and scalable server-side applications.
+- **TypeScript**: A superset of JavaScript that adds static types.
+- **MySQL**: A powerful, open-source relational database system.
+- **Prisma ORM**: A next-generation ORM for Node.js, NestJS, etc.., simplifying database access.
+- **Swagger**: API documentation and testing tool.
+
+## API Endpoints
+
+### Authentication
+
+#### Register a New User
+
+- **Endpoint**: `POST /api/v1/auth/register`
+- **Description**: This endpoint allows a new user to register an account. The user must provide their login credentials and other personal information. Upon successful registration, the user will be created in the database.
+- **Request Body**:
+  ```json
+  {
+    "user_login": "john_doe",
+    "user_pass": "securePassword123",
+    "user_nicename": "John",
+    "user_email": "john.doe@example.com",
+    "user_url": "https://example.com/johndoe",
+    "user_activation_key": "abc123",
+    "user_status": 1,
+    "display_name": "John Doe"
+  }
+  ```
+- **Sample Response**:
+  - **201 Created**: User registered successfully.
+  ```json
+  {
+    "id": "a3d39c95-2e7f-463e-bc7c-7d693f189666",
+    "user_login": "john_doe",
+    "user_nicename": "John",
+    "user_email": "john.doe@example.com",
+    "user_url": "https://example.com/johndoe",
+    "user_registered": "2025-01-22T11:35:52.877Z",
+    "user_activation_key": "abc123",
+    "user_status": 1,
+    "display_name": "John Doe"
+  }
+  ```
+- **Response status**:
+  - **201 Created**: User registered successfully.
+  - **400 Bad Request**: Validation errors.
+
+#### Login a User
+
+- **Endpoint**: `POST /api/v1/auth/login`
+- **Description**: This endpoint allows an existing user to log in to their account. The user must provide their login credentials. Upon successful login, a JWT access token will be returned, which can be used for subsequent authenticated requests.
+- **Request Body**:
+  ```json
+  {
+    "user_login": "john_doe",
+    "user_pass": "securePassword123"
+  }
+  ```
+- **Responses**:
+  - **200 OK**: User logged in successfully.
+    ```json
+    {
+      "access_token": "some.jwt.token",
+      "user": {
+        "id": 1,
+        "user_login": "john_doe",
+        "user_email": "john.doe@example.com",
+        "user_nicename": "John"
+      }
+    }
+    ```
+  - **401 Unauthorized**: Invalid credentials.
+
+### Job Listings
+
+#### Get All Job Listings
+
+- **Endpoint**: `GET /api/v1/jobs`
+- **Description**: This endpoint retrieves a paginated list of job postings. The user must provide a valid JWT access token in the `Authorization` header to access this endpoint. The response will include job details such as title, company, location, and description.
+- **Headers**:
+  - `Authorization: Bearer <access_token>`
+- **Query Parameters**:
+
+  - `page`: (optional) Page number for pagination (default: 1)
+  - `limit`: (optional) Number of listings per page (default: 15)
+
+- **Sample Response**:
+  - **200 OK**: Successfully retrieved job listings.
+  ```json
+  {
+    "ID": 174,
+    "post_author": 1,
+    "post_date": "2024-08-10T15:45:43.000Z",
+    "post_date_gmt": "2024-08-10T11:45:43.000Z",
+    "post_title": "Master Your Interview: A Comprehensive Guide",
+    "post_excerpt": "A guide to mastering the interview process.",
+    "post_status": "publish",
+    "comment_status": "closed",
+    "ping_status": "closed",
+    "post_name": "master-your-interview-a-comprehensive-guide",
+    "post_modified": "2024-08-10T16:57:09.000Z",
+    "guid": "https://example.com/job/174",
+    "post_type": "post",
+    "comment_count": 2
+  }
+  ```
+- **Responses**:
+  - **200 OK**: Successfully retrieved job listings.
+  - **401 Unauthorized**: Invalid or missing token.
 
 ## Installation
 
-```bash
-$ npm install
-```
+1. Clone the repository:
 
-## Running the app
+   ```bash
+   git clone https://github.com/Franzcasttr/explorejobsAPI
+   cd exploreJobsAPI
+   ```
 
-```bash
-# development
-$ npm run start
+2. Install dependencies:
 
-# watch mode
-$ npm run start:dev
+   ```bash
+   npm install
+   ```
 
-# production mode
-$ npm run start:prod
-```
+3. Set up the database:
 
-## Test
+   - Create a MySQL database and update the connection settings in the `.env` file.
 
-```bash
-# unit tests
-$ npm run test
+   ```plaintext
+   DATABASE_URL=your_database_url_here
+   JWT_SECRET=your_jwt_secret_here
+   ```
 
-# e2e tests
-$ npm run test:e2e
+4. Run the application:
 
-# test coverage
-$ npm run test:cov
-```
+   ```bash
+   npm run start:dev
+   ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+5. Access the Swagger documentation:
+   - Open your browser and navigate to `http://localhost:8000/api/docs`.
