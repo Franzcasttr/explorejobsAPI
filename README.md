@@ -137,11 +137,12 @@ A simple job listing application inspired by platforms like LinkedIn, Indeed, an
 3. Set up the database:
 
    - Create a MySQL database and update the connection settings in the `.env` file.
+   - Import the required `wp_posts` SQL dump file which you can find in the root folder to populate job listings:
 
-   ```plaintext
-   DATABASE_URL=your_database_url_here
-   JWT_SECRET=your_jwt_secret_here
-   ```
+```plaintext
+DATABASE_URL=your_database_url_here
+JWT_SECRET=your_jwt_secret_here
+```
 
 4. Run the application:
 
